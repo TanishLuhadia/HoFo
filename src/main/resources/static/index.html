@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HoFo - Smarter Dining Starts Here</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{font-family:Inter,sans-serif}
+body{background:#050505;color:white;overflow-x:hidden}
+.hero{
+background:
+radial-gradient(circle at 20% 20%,rgba(249,115,22,.35),transparent 30%),
+radial-gradient(circle at 80% 30%,rgba(249,115,22,.2),transparent 30%),
+#050505;
+}
+.glass{
+background:rgba(255,255,255,.05);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,.08);
+}
+.float{animation:float 4s ease-in-out infinite}
+@keyframes float{
+50%{transform:translateY(-12px)}
+}
+.line{
+height:2px;
+background:linear-gradient(90deg,#f97316,transparent);
+animation:move 2s linear infinite;
+}
+@keyframes move{
+from{background-position:0 0}
+to{background-position:300px 0}
+}
+</style>
+</head>
+<body>
+
+<nav class="fixed top-0 w-full z-50 bg-black/50 backdrop-blur-lg border-b border-white/10">
+<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+<h1 class="text-3xl font-extrabold text-orange-500">HoFo</h1>
+<div class="hidden md:flex gap-8 text-gray-300">
+<a href="#">Features</a>
+<a href="#">Solutions</a>
+<a href="#">Partners</a>
+<a href="#">Contact</a>
+</div>
+<button class="bg-orange-500 px-5 py-2 rounded-xl font-semibold">Get Started</button>
+</div>
+</nav>
+
+<section class="hero min-h-screen flex items-center">
+<div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-14 items-center">
+
+<div>
+<div class="inline-block px-4 py-2 rounded-full bg-orange-500/20 text-orange-300">
+Next Generation Dining Platform
+</div>
+
+<h1 class="text-6xl md:text-7xl font-extrabold mt-8 leading-tight">
+Never Wait
+For A Table
+<span class="text-orange-500">Again.</span>
+</h1>
+
+<p class="text-xl text-gray-400 mt-6 max-w-xl">
+Reserve seats, pre-order meals, track kitchen progress and arrive exactly when everything is ready.
+</p>
+
+<div class="flex gap-4 mt-10">
+<button class="bg-orange-500 px-8 py-4 rounded-xl font-bold">
+Start Exploring
+</button>
+<button class="border border-white/10 px-8 py-4 rounded-xl">
+Become Partner
+</button>
+</div>
+</div>
+
+<div class="relative">
+<div class="glass p-6 rounded-3xl float">
+<div class="flex justify-between">
+<span>Table Reserved</span>
+<span class="text-green-400">✓</span>
+</div>
+
+<div class="mt-6">
+<p class="text-gray-400">Food Preparation</p>
+<div class="w-full bg-gray-800 rounded-full h-3 mt-3">
+<div class="bg-orange-500 h-3 rounded-full w-3/4"></div>
+</div>
+<p class="mt-2 text-orange-400">75% Completed</p>
+</div>
+
+<div class="grid grid-cols-2 gap-4 mt-8">
+<div class="bg-black/30 p-4 rounded-xl">
+<p class="text-gray-400">Arrival ETA</p>
+<h3 class="text-2xl font-bold">18 min</h3>
+</div>
+<div class="bg-black/30 p-4 rounded-xl">
+<p class="text-gray-400">Food Ready</p>
+<h3 class="text-2xl font-bold">17 min</h3>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</section>
+
+<section class="py-24">
+<div class="max-w-6xl mx-auto text-center px-6">
+<h2 class="text-5xl font-bold">One Platform. Three Stakeholders.</h2>
+
+<div class="grid md:grid-cols-3 gap-10 mt-16">
+<div class="glass p-8 rounded-3xl">
+<h3 class="text-3xl mb-3">👤</h3>
+<h4 class="text-xl font-bold">Customer</h4>
+<p class="text-gray-400 mt-3">Reserve seats, pre-order food and manage group dining.</p>
+</div>
+
+<div class="glass p-8 rounded-3xl">
+<h3 class="text-3xl mb-3">🍽️</h3>
+<h4 class="text-xl font-bold">Restaurant</h4>
+<p class="text-gray-400 mt-3">Manage reservations, occupancy and operations.</p>
+</div>
+
+<div class="glass p-8 rounded-3xl">
+<h3 class="text-3xl mb-3">👨‍🍳</h3>
+<h4 class="text-xl font-bold">Kitchen</h4>
+<p class="text-gray-400 mt-3">Track preparation progress and optimize delivery time.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="py-24 bg-white/[0.02]">
+<div class="max-w-6xl mx-auto px-6">
+<h2 class="text-center text-5xl font-bold mb-16">How HoFo Works</h2>
+
+<div class="grid md:grid-cols-4 gap-8 text-center">
+<div>
+<div class="text-5xl">1️⃣</div>
+<h3 class="mt-4 font-bold">Select Restaurant</h3>
+</div>
+<div>
+<div class="text-5xl">2️⃣</div>
+<h3 class="mt-4 font-bold">Reserve Table</h3>
+</div>
+<div>
+<div class="text-5xl">3️⃣</div>
+<h3 class="mt-4 font-bold">Pre-Order Food</h3>
+</div>
+<div>
+<div class="text-5xl">4️⃣</div>
+<h3 class="mt-4 font-bold">Arrive & Enjoy</h3>
+</div>
+</div>
+</div>
+</section>
+
+<section class="py-24">
+<div class="max-w-7xl mx-auto px-6">
+<h2 class="text-5xl font-bold text-center mb-16">Why HoFo?</h2>
+
+<div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="glass p-8 rounded-3xl">
+<h3 class="font-bold text-xl">Real-Time Availability</h3>
+<p class="text-gray-400 mt-3">Know seat availability before leaving.</p>
+</div>
+
+<div class="glass p-8 rounded-3xl">
+<h3 class="font-bold text-xl">Smart ETA Engine</h3>
+<p class="text-gray-400 mt-3">Travel time + kitchen time combined.</p>
+</div>
+
+<div class="glass p-8 rounded-3xl">
+<h3 class="font-bold text-xl">Kitchen Tracking</h3>
+<p class="text-gray-400 mt-3">Monitor order preparation stages.</p>
+</div>
+
+<div class="glass p-8 rounded-3xl">
+<h3 class="font-bold text-xl">Group Coordination</h3>
+<p class="text-gray-400 mt-3">Perfect for families and teams.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="py-24">
+<div class="max-w-6xl mx-auto px-6">
+<div class="glass rounded-[40px] p-12 text-center">
+<h2 class="text-6xl font-extrabold">Reserve. Order. Arrive.</h2>
+<p class="text-gray-400 mt-6 text-xl">
+A smarter way to experience dining.
+</p>
+
+<div class="grid md:grid-cols-4 gap-8 mt-12">
+<div><h3 class="text-4xl font-bold text-orange-500">500+</h3><p>Partners</p></div>
+<div><h3 class="text-4xl font-bold text-orange-500">50K+</h3><p>Reservations</p></div>
+<div><h3 class="text-4xl font-bold text-orange-500">100K+</h3><p>Orders</p></div>
+<div><h3 class="text-4xl font-bold text-orange-500">99%</h3><p>Satisfaction</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<footer class="border-t border-white/10 py-10 text-center text-gray-500">
+HoFo © 2026 • Smarter Dining Platform
+</footer>
+
+</body>
+</html>
