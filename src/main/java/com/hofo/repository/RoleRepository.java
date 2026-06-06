@@ -6,5 +6,5 @@ import com.hofo.entity.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Integer> {
 
-    Role findByRoleName(String roleName);
+	Role findByRoleName(String roleName);
 }

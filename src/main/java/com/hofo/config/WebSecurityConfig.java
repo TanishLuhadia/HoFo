@@ -12,13 +12,12 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class WebSecurityConfig {
-	
+
 	private final UserDetailsService userDetailsService;
-	
-public WebSecurityConfig(UserDetailsService userDetailsService)
-{
-	this.userDetailsService=userDetailsService;
-}
+
+	public WebSecurityConfig(UserDetailsService userDetailsService) {
+		this.userDetailsService = userDetailsService;
+	}
 //	@Bean
 //	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 //
@@ -33,36 +32,26 @@ public WebSecurityConfig(UserDetailsService userDetailsService)
 //
 //	    return httpSecurity.build();
 //	}
-	
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http) throws Exception {
+	@Bean
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
+		http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers("/register")
-                        .permitAll()
+				.requestMatchers("/register").permitAll()
 
-                        .requestMatchers("/admin/**")
-                        .hasRole("ADMIN")
+				.requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        .requestMatchers("/user/**","/login")
-                        .hasAnyRole("USER", "ADMIN")
+				.requestMatchers("/user/**", "/login").hasAnyRole("USER", "ADMIN")
 
-                        .anyRequest()
-                        .authenticated()
+				.anyRequest().authenticated()
 
-                )
-                .formLogin(Customizer.withDefaults())
-                .logout(Customizer.withDefaults());
-        
-        return http.build();
-    }
-	
-	//	@Bean
+		).formLogin(Customizer.withDefaults()).logout(Customizer.withDefaults());
+
+		return http.build();
+	}
+
+	// @Bean
 //	public UserDetailsService userDetailsService() {
 //	    UserDetails tanish = User.withUsername("tanish")
 //	            .password("{noop}tanish")
@@ -76,19 +65,17 @@ public WebSecurityConfig(UserDetailsService userDetailsService)
 //
 //	    return new InMemoryUserDetailsManager(tanish, tanisha);
 //	}
-	
+
 	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder()
-	{
-	return new BCryptPasswordEncoder(14);	
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder(14);
 	}
-	
+
 	@Bean
-public AuthenticationProvider authenticationProvider()
-{
-	DaoAuthenticationProvider provider=new DaoAuthenticationProvider(userDetailsService);
-	//provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
-	provider.setPasswordEncoder(bCryptPasswordEncoder());
-	return provider;
-}
+	public AuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+		// provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
+		provider.setPasswordEncoder(bCryptPasswordEncoder());
+		return provider;
+	}
 }

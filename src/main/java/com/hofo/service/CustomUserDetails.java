@@ -10,30 +10,25 @@ import com.hofo.entity.User;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final User user;
+	private final User user;
 
-    public CustomUserDetails(User user) {
-        this.user = user;
-    }
+	public CustomUserDetails(User user) {
+		this.user = user;
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        return user.getRoles()
-                .stream()
-                .map(role ->
-                        new SimpleGrantedAuthority(
-                                "ROLE_" + role.getRoleName()))
-                .toList();
-    }
+		return user.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRoleName())).toList();
+	}
 
-    @Override
-    public String getPassword() {
-        return user.getPassword();
-    }
+	@Override
+	public String getPassword() {
+		return user.getPassword();
+	}
 
-    @Override
-    public String getUsername() {
-        return user.getUsername();
-    }
+	@Override
+	public String getUsername() {
+		return user.getUsername();
+	}
 }

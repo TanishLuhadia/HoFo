@@ -13,54 +13,46 @@ import com.hofo.repository.UserRepository;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final RoleRepository roleRepository;
+	private final UserRepository userRepository;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final RoleRepository roleRepository;
 
-    public UserService(
-            UserRepository userRepository,
-            BCryptPasswordEncoder bCryptPasswordEncoder,
-            RoleRepository roleRepository) {
+	public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder,
+			RoleRepository roleRepository) {
 
-        this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.roleRepository = roleRepository;
-    }
+		this.userRepository = userRepository;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.roleRepository = roleRepository;
+	}
 
-    public User register(User user) {
+	public User register(User user) {
 
-        user.setPassword(
-                bCryptPasswordEncoder.encode(user.getPassword()));
+		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
-        Role role =
-                roleRepository.findByRoleName("USER");
+		Role role = roleRepository.findByRoleName("USER");
 
-        if(role == null) {
-            throw new RuntimeException(
-                    "USER role not found in database");
-        }
+		if (role == null) {
+			throw new RuntimeException("USER role not found in database");
+		}
 
-        user.setRoles(Set.of(role));
+		user.setRoles(Set.of(role));
 
-        return userRepository.save(user);
-    }
-    
-    public User register(User user, String roleName) {
+		return userRepository.save(user);
+	}
 
-        user.setPassword(
-                bCryptPasswordEncoder.encode(user.getPassword()));
+	public User register(User user, String roleName) {
 
-        Role role =
-                roleRepository.findByRoleName(
-                        roleName.toUpperCase());
+		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
-        if(role == null) {
-            throw new RuntimeException("Role not found");
-        }
+		Role role = roleRepository.findByRoleName(roleName.toUpperCase());
 
-        user.setRoles(Set.of(role));
+		if (role == null) {
+			throw new RuntimeException("Role not found");
+		}
 
-        return userRepository.save(user);
-    }
-    
+		user.setRoles(Set.of(role));
+
+		return userRepository.save(user);
+	}
+
 }
