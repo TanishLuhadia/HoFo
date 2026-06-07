@@ -1,0 +1,377 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HoFo - Register</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<style>
+
+body{
+    min-height:100vh;
+    background:
+    radial-gradient(circle at top left,
+    rgba(249,115,22,.15),
+    transparent 40%),
+    radial-gradient(circle at bottom right,
+    rgba(249,115,22,.12),
+    transparent 40%),
+    #030303;
+}
+
+.glass{
+    backdrop-filter:blur(20px);
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+}
+
+label.error{
+    color:#ef4444;
+    font-size:13px;
+    margin-top:5px;
+    display:block;
+}
+
+.error-msg{
+    color:#ef4444;
+    font-size:13px;
+}
+
+.success-msg{
+    color:#22c55e;
+    font-size:13px;
+}
+
+</style>
+
+<script>
+
+$(document).ready(function(){
+
+    let usernameValid = false;
+    let emailValid = false;
+
+    $("#registerBtn").prop("disabled", true);
+
+    function updateRegisterButton() {
+
+        $("#registerBtn").prop(
+            "disabled",
+            !(usernameValid && emailValid)
+        );
+    }
+
+    $("#username").blur(function(){
+
+        let username = $(this).val().trim();
+
+        if(username === ""){
+            usernameValid = false;
+            updateRegisterButton();
+            return;
+        }
+
+        $.get("/check-username", {
+            username: username
+        }, function(data){
+
+            if(data){
+
+                $("#usernameError")
+                    .removeClass("error-msg")
+                    .addClass("success-msg")
+                    .text("Username available");
+
+                usernameValid = true;
+
+            }else{
+
+                $("#usernameError")
+                    .removeClass("success-msg")
+                    .addClass("error-msg")
+                    .text("Username already exists");
+
+                usernameValid = false;
+            }
+
+            updateRegisterButton();
+        });
+    });
+
+    $("#email").blur(function(){
+
+        let email = $(this).val().trim();
+
+        if(email === ""){
+            emailValid = false;
+            updateRegisterButton();
+            return;
+        }
+
+        $.get("/check-email", {
+            email: email
+        }, function(data){
+
+            if(data){
+
+                $("#emailError")
+                    .removeClass("error-msg")
+                    .addClass("success-msg")
+                    .text("Email available");
+
+                emailValid = true;
+
+            }else{
+
+                $("#emailError")
+                    .removeClass("success-msg")
+                    .addClass("error-msg")
+                    .text("Email already exists");
+
+                emailValid = false;
+            }
+
+            updateRegisterButton();
+        });
+    });
+
+    $("#registerForm").validate({
+
+        rules:{
+            username:{
+                required:true,
+                minlength:3
+            },
+            email:{
+                required:true,
+                email:true
+            },
+            password:{
+                required:true,
+                minlength:6
+            }
+        },
+
+        messages:{
+            username:{
+                required:"Please enter username",
+                minlength:"Minimum 3 characters"
+            },
+            email:{
+                required:"Please enter email",
+                email:"Please enter valid email"
+            },
+            password:{
+                required:"Please enter password",
+                minlength:"Minimum 6 characters"
+            }
+        },
+
+        submitHandler:function(form){
+
+            if(!usernameValid || !emailValid){
+                return;
+            }
+
+            $("#registerBtn").prop("disabled", true);
+            $("#registerError").text("");
+
+            $.ajax({
+
+                url:"/register",
+                type:"POST",
+                contentType:"application/json",
+
+                data:JSON.stringify({
+
+                    username:$("#username").val(),
+                    email:$("#email").val(),
+                    password:$("#password").val()
+
+                }),
+
+                success:function(response){
+
+                    window.location.href="/login";
+                },
+
+                error:function(){
+    console.log(xhr.responseText);
+    console.log(xhr.status);
+
+                    $("#registerBtn").prop("disabled", false);
+
+                    $("#registerError").text(
+                        "Registration failed"
+                    );
+                }
+            });
+        }
+    });
+});
+
+</script>
+
+</head>
+
+<body class="flex items-center justify-center p-6">
+
+<div class="w-full max-w-6xl rounded-3xl overflow-hidden glass shadow-2xl">
+
+    <div class="grid lg:grid-cols-2">
+
+        <div class="hidden lg:flex flex-col justify-center p-14 bg-gradient-to-br from-orange-500 to-amber-600">
+
+            <div>
+
+                <h1 class="text-6xl font-black text-white mb-6">
+                    HoFo
+                </h1>
+
+                <p class="text-2xl text-orange-100 font-semibold mb-8">
+                    Smart Dining. Zero Waiting.
+                </p>
+
+                <p class="text-orange-50 leading-8 text-lg">
+
+                    Join HoFo and reserve tables instantly.
+
+                    <br><br>
+
+                    Skip waiting lines.
+
+                    <br><br>
+
+                    Pre-order meals.
+
+                    <br><br>
+
+                    Enjoy a seamless dining experience.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="p-8 md:p-14">
+
+            <div class="max-w-md mx-auto">
+
+                <div class="text-center mb-10">
+
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-3xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-4xl">
+                        🍽️
+                    </div>
+
+                    <h2 class="text-4xl font-bold text-white">
+                        Create Account
+                    </h2>
+
+                    <p class="text-gray-400 mt-3">
+                        Join HoFo today
+                    </p>
+
+                </div>
+
+                <form id="registerForm" class="space-y-6">
+
+                    <div>
+
+                        <label class="block text-sm text-gray-300 mb-2">
+                            Username
+                        </label>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Enter username"
+                            class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
+
+                        <span id="usernameError"></span>
+
+                    </div>
+
+                    <div>
+
+                        <label class="block text-sm text-gray-300 mb-2">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Enter email"
+                            class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
+
+                        <span id="emailError"></span>
+
+                    </div>
+
+                    <div>
+
+                        <label class="block text-sm text-gray-300 mb-2">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter password"
+                            class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
+
+                    </div>
+
+                    <span id="registerError" class="error-msg"></span>
+
+                    <button
+                        id="registerBtn"
+                        type="submit"
+                        disabled
+                        class="w-full h-14 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed">
+
+                        Create Account
+
+                    </button>
+
+                </form>
+
+                <div class="mt-10 text-center">
+
+                    <p class="text-gray-400">
+                        Already have an account?
+                    </p>
+
+                    <a
+                        href="/login"
+                        class="text-orange-400 hover:text-orange-300 font-semibold">
+
+                        Sign In
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
+```
