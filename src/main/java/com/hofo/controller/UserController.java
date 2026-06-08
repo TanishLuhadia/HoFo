@@ -18,6 +18,9 @@ import com.hofo.repository.VerificationTokenRepository;
 import com.hofo.service.EmailService;
 import com.hofo.service.UserService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+
 @Controller
 public class UserController {
 
@@ -49,7 +52,7 @@ public class UserController {
 
 	@ResponseBody
 	@PostMapping("/login")
-	public ActionResponse login(@RequestBody User user) {
+	public ActionResponse login(@RequestBody User user,HttpServletResponse res) {
 //		var u = userRepository.findByUsername(user.getUsername());
 //		if (!Objects.isNull(u))
 //			return "success";
@@ -81,8 +84,14 @@ public class UserController {
 		else {
 			actionResponse.setResult(response);
 			actionResponse.setSuccessful(true);
+		    Cookie cookie = new Cookie("jwt",response);
+		    cookie.setHttpOnly(true);
+		    cookie.setPath("/");
+		    cookie.setMaxAge(60 * 60 * 24); // 1 day
+		    res.addCookie(cookie);
 
 		}
+
 		return actionResponse;
 	}
 
@@ -137,4 +146,10 @@ public class UserController {
 
 	}
 
+	
+	@GetMapping("/restaurant-data")
+	public String restaurant()
+	{
+		return "restaurant";
+	}
 }

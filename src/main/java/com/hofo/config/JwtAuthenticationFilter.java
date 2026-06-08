@@ -16,6 +16,7 @@ import com.hofo.service.JwtService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -37,11 +38,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String path = request.getRequestURI();
 
 		final String authHeader = request.getHeader("Authorization");
+		if(authHeader!=null)
+		{
+			
+		}
 		if (authHeader == null || !authHeader.startsWith("Bearer") ||   path.equals("/register") || path.equals("/verify")){
 			filterChain.doFilter(request, response);
 			return;
 		}
-		final String jwt = authHeader.substring(7);
+		 String jwt = authHeader.substring(7);
+		
+		   if(jwt == null && request.getCookies() != null) {
+
+	            for(Cookie cookie : request.getCookies()) {
+
+	                if(cookie.getName().equals("jwt")) {
+	                    jwt = cookie.getValue();
+	                    break;
+	                }
+	            }
+	        }
 		final String userName = jwtService.extractUserName(jwt);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (userName != null && authentication == null) {

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HoFo - Restaurants</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+
+body{
+    background:#0a0a0a;
+}
+
+.card{
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+
+<nav class="bg-black border-b border-neutral-800">
+
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+        <h1 class="text-3xl font-bold text-orange-500">
+            HoFo
+        </h1>
+
+        <a href="/login"
+           class="text-white hover:text-orange-400">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+<!-- Hero -->
+
+<section class="py-16 text-center">
+
+    <h2 class="text-5xl font-bold text-white mb-4">
+        Discover Restaurants
+    </h2>
+
+    <p class="text-gray-400 text-lg">
+        Reserve tables and order before you arrive
+    </p>
+
+</section>
+
+<!-- Restaurants -->
+
+<div class="max-w-7xl mx-auto px-6 pb-16">
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <div class="card bg-neutral-900 rounded-2xl overflow-hidden">
+
+            <img
+                src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4"
+                class="h-60 w-full object-cover">
+
+            <div class="p-6">
+
+                <h3 class="text-white text-2xl font-bold">
+                    Spice Garden
+                </h3>
+
+                <p class="text-gray-400 mt-2">
+                    Indian Cuisine
+                </p>
+
+                <button
+                    class="mt-4 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl">
+
+                    View Details
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="card bg-neutral-900 rounded-2xl overflow-hidden">
+
+            <img
+                src="https://images.unsplash.com/photo-1552566626-52f8b828add9"
+                class="h-60 w-full object-cover">
+
+            <div class="p-6">
+
+                <h3 class="text-white text-2xl font-bold">
+                    Urban Tadka
+                </h3>
+
+                <p class="text-gray-400 mt-2">
+                    Multi Cuisine
+                </p>
+
+                <button
+                    class="mt-4 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl">
+
+                    View Details
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="card bg-neutral-900 rounded-2xl overflow-hidden">
+
+            <img
+                src="https://images.unsplash.com/photo-1514933651103-005eec06c04b"
+                class="h-60 w-full object-cover">
+
+            <div class="p-6">
+
+                <h3 class="text-white text-2xl font-bold">
+                    Pizza Hub
+                </h3>
+
+                <p class="text-gray-400 mt-2">
+                    Italian Food
+                </p>
+
+                <button
+                    class="mt-4 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl">
+
+                    View Details
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
