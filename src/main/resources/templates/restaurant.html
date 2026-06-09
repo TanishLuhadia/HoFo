@@ -1,157 +1,363 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>HoFo - Restaurants</title>
+<title>Restaurants</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-
-<style>
-
-body{
-    background:#0a0a0a;
-}
-
-.card{
-    transition:.3s;
-}
-
-.card:hover{
-    transform:translateY(-5px);
-}
-
-</style>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 </head>
 
-<body>
+<body class="bg-gray-100">
 
-<!-- Navbar -->
+<!-- HEADER -->
 
-<nav class="bg-black border-b border-neutral-800">
+<div class="bg-orange-500 text-white p-5">
 
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <div class="max-w-7xl mx-auto flex justify-between">
 
-        <h1 class="text-3xl font-bold text-orange-500">
+        <h1 class="text-3xl font-bold">
             HoFo
         </h1>
 
-        <a href="/login"
-           class="text-white hover:text-orange-400">
+        <button
+            id="logoutBtn"
+            class="bg-white text-orange-500 px-4 py-2 rounded">
+
             Logout
-        </a>
+
+        </button>
 
     </div>
 
-</nav>
+</div>
 
-<!-- Hero -->
+<!-- LOCATION SECTION -->
 
-<section class="py-16 text-center">
+<div class="max-w-7xl mx-auto mt-6">
 
-    <h2 class="text-5xl font-bold text-white mb-4">
-        Discover Restaurants
-    </h2>
+    <div class="bg-white p-6 rounded shadow">
 
-    <p class="text-gray-400 text-lg">
-        Reserve tables and order before you arrive
-    </p>
+        <h2 class="text-xl font-bold mb-4">
 
-</section>
+            Choose Location
 
-<!-- Restaurants -->
+        </h2>
 
-<div class="max-w-7xl mx-auto px-6 pb-16">
+        <div class="flex gap-3">
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <button
+                id="locationBtn"
+                class="bg-orange-500 text-white px-5 py-2 rounded">
 
-        <div class="card bg-neutral-900 rounded-2xl overflow-hidden">
+                Use My Location
 
-            <img
-                src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4"
-                class="h-60 w-full object-cover">
+            </button>
 
-            <div class="p-6">
+            <select
+                id="citySelect"
+                class="border p-2 rounded">
 
-                <h3 class="text-white text-2xl font-bold">
-                    Spice Garden
-                </h3>
+                <option value="">
+                    Select City
+                </option>
 
-                <p class="text-gray-400 mt-2">
-                    Indian Cuisine
-                </p>
-
-                <button
-                    class="mt-4 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl">
-
-                    View Details
-
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="card bg-neutral-900 rounded-2xl overflow-hidden">
-
-            <img
-                src="https://images.unsplash.com/photo-1552566626-52f8b828add9"
-                class="h-60 w-full object-cover">
-
-            <div class="p-6">
-
-                <h3 class="text-white text-2xl font-bold">
-                    Urban Tadka
-                </h3>
-
-                <p class="text-gray-400 mt-2">
-                    Multi Cuisine
-                </p>
-
-                <button
-                    class="mt-4 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl">
-
-                    View Details
-
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="card bg-neutral-900 rounded-2xl overflow-hidden">
-
-            <img
-                src="https://images.unsplash.com/photo-1514933651103-005eec06c04b"
-                class="h-60 w-full object-cover">
-
-            <div class="p-6">
-
-                <h3 class="text-white text-2xl font-bold">
-                    Pizza Hub
-                </h3>
-
-                <p class="text-gray-400 mt-2">
-                    Italian Food
-                </p>
-
-                <button
-                    class="mt-4 w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl">
-
-                    View Details
-
-                </button>
-
-            </div>
+            </select>
 
         </div>
 
     </div>
 
 </div>
+
+<!-- NEARBY -->
+
+<div
+    id="nearbySection"
+    class="max-w-7xl mx-auto mt-8 hidden">
+
+    <h2 class="text-2xl font-bold mb-4">
+
+        Nearby Restaurants
+
+    </h2>
+
+    <div
+        id="nearbyRestaurants"
+        class="grid md:grid-cols-3 gap-6">
+
+    </div>
+
+</div>
+
+<!-- CITY -->
+
+<div
+    id="citySection"
+    class="max-w-7xl mx-auto mt-8 hidden">
+
+    <h2 class="text-2xl font-bold mb-4">
+
+        Restaurants In City
+
+    </h2>
+
+    <div
+        id="cityRestaurants"
+        class="grid md:grid-cols-3 gap-6">
+
+    </div>
+
+</div>
+
+<script>
+
+$(document).ready(function(){
+
+    loadCities();
+
+});
+
+function loadCities(){
+
+    $.ajax({
+
+        url:"/api/cities",
+
+        headers:{
+            Authorization:
+            "Bearer " + localStorage.getItem("token")
+        },
+
+        success:function(cities){
+
+            cities.forEach(city=>{
+
+                $("#citySelect").append(
+
+                    `<option value="${city}">
+                        ${city}
+                    </option>`
+                );
+
+            });
+
+        },
+
+        error:function(){
+
+            sessionExpired();
+
+        }
+
+    });
+
+}
+
+$("#locationBtn").click(function(){
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position){
+
+            loadNearbyRestaurants(
+
+                position.coords.latitude,
+                position.coords.longitude
+
+            );
+
+        },
+
+        function(){
+
+            alert(
+                "Location denied. Please select city."
+            );
+
+        }
+
+    );
+
+});
+
+$("#citySelect").change(function(){
+
+    let city = $(this).val();
+
+    if(city==="") return;
+
+    $.ajax({
+
+        url:"/api/restaurants/city",
+
+        data:{
+            city:city
+        },
+
+        headers:{
+            Authorization:
+            "Bearer " + localStorage.getItem("token")
+        },
+
+        success:function(restaurants){
+
+            $("#citySection").removeClass("hidden");
+
+            $("#cityRestaurants").html("");
+
+            restaurants.forEach(r=>{
+
+                $("#cityRestaurants").append(
+
+                    restaurantCard(r)
+
+                );
+
+            });
+
+        },
+
+        error:function(){
+
+            sessionExpired();
+
+        }
+
+    });
+
+});
+
+function loadNearbyRestaurants(lat,lng){
+
+    $.ajax({
+
+        url:"/api/restaurants/nearby",
+
+        data:{
+            latitude:lat,
+            longitude:lng
+        },
+
+        headers:{
+            Authorization:
+            "Bearer " + localStorage.getItem("token")
+        },
+
+        success:function(restaurants){
+
+            $("#nearbySection")
+                .removeClass("hidden");
+
+            $("#nearbyRestaurants")
+                .html("");
+
+            restaurants.forEach(r=>{
+
+                $("#nearbyRestaurants")
+                    .append(
+                        restaurantCard(r)
+                    );
+
+            });
+
+        },
+
+        error:function(){
+
+            sessionExpired();
+
+        }
+
+    });
+
+}
+
+function restaurantCard(r){
+
+    return `
+
+        <div
+            class="bg-white rounded shadow overflow-hidden">
+
+            <img
+                src="${r.imageUrl}"
+                class="h-52 w-full object-cover">
+
+            <div class="p-4">
+
+                <h3
+                    class="text-xl font-bold">
+
+                    ${r.name}
+
+                </h3>
+
+                <p
+                    class="text-gray-600 mt-2">
+
+                    ${r.description}
+
+                </p>
+
+                <p
+                    class="mt-2 text-sm">
+
+                    ${r.address}
+
+                </p>
+
+                ${
+                    r.distance
+                    ?
+                    `<p class="text-orange-500 font-bold mt-2">
+                        ${r.distance.toFixed(1)} km away
+                     </p>`
+                    :
+                    ''
+                }
+
+                <button
+                    class="mt-4 w-full bg-orange-500 text-white py-2 rounded">
+
+                    View Restaurant
+
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+$("#logoutBtn").click(function(){
+
+    localStorage.removeItem("token");
+
+    window.location.href =
+        "/login";
+
+});
+
+function sessionExpired(){
+
+    localStorage.removeItem("token");
+
+    alert(
+        "Your session has expired. Please login again."
+    );
+
+    window.location.href =
+        "/loginP";
+
+}
+
+</script>
 
 </body>
 </html>

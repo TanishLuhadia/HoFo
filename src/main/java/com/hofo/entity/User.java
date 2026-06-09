@@ -18,26 +18,9 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+
 	@Column(unique = true, nullable = false)
 	private String username;
-
-	private String password;
-
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles;
-	
-	private boolean isActive;
-	@Column(unique = true, nullable = false)
-	private String email;
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
 
 	public Integer getId() {
 		return id;
@@ -63,12 +46,46 @@ public class User {
 		this.password = password;
 	}
 
-	public boolean isActive() {
-		return isActive;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
 	}
 
 	public Set<Role> getRoles() {
@@ -78,4 +95,27 @@ public class User {
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
+
+	private String password;
+
+	@Column(unique = true, nullable = false)
+	private String email;
+
+	private boolean active = false;
+	/*
+	 * User selected city Used when location permission denied
+	 */
+	private String city;
+
+	/*
+	 * Last known location
+	 */
+	private Double latitude;
+
+	private Double longitude;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles;
+
 }

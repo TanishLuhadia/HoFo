@@ -64,8 +64,21 @@
 		            },
 
 		            success: function () {
-		                window.location.href = "/restaurant";
-		            },
+						$.ajax({
+						      url: "/restaurant-data",
+						      type: "GET",
+						      headers: {
+						          "Authorization": "Bearer " + localStorage.getItem("token")
+						      },
+						      success: 							  function(response){
+
+							  					            document.open();
+							  					            document.write(response);
+							  					            document.close();
+
+							  					        }
+
+						  });		            },
 
 		            error: function () {
 		                localStorage.removeItem("token");
@@ -81,7 +94,24 @@
 		        const token = localStorage.getItem("token");
 
 		        if (token) {
-		            window.location.href = "/restaurant";
+					
+					
+					$.ajax({
+					      url: "/restaurant-data",
+					      type: "GET",
+					      headers: {
+					          "Authorization": "Bearer " + localStorage.getItem("token")
+					      },
+					      success: 							  function(response){
+
+						  					            document.open();
+						  					            document.write(response);
+						  					            document.close();
+
+						  					        }
+
+					  });	
+					
 		        } else {
 					alert('Returning login page');
 		            window.location.href = "/login";
