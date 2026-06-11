@@ -37,32 +37,47 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		String path = request.getRequestURI();
 
-		final String authHeader = request.getHeader("Authorization");
-		if (authHeader != null) {
+		String jwt = resolveToken(request);
 
-		}
-		if (authHeader == null || !authHeader.startsWith("Bearer") || path.equals("/register")
-				|| path.equals("/verify")) {
+		if (jwt == null || path.equals("/register") || path.equals("/verify")) {
 			filterChain.doFilter(request, response);
 			return;
 		}
-		String jwt = authHeader.substring(7);
 
-		final String userName = jwtService.extractUserName(jwt);
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (userName != null && authentication == null) {
-			// authenticate
-			UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-			if (jwtService.isTokenValid(jwt, userDetails)) {
-				UsernamePasswordAuthenticationToken autheticationToken = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
+		try {
+			final String userName = jwtService.extractUserName(jwt);
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (userName != null && authentication == null) {
+				// authenticate
+				UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+				if (jwtService.isTokenValid(jwt, userDetails)) {
+					UsernamePasswordAuthenticationToken autheticationToken = new UsernamePasswordAuthenticationToken(
+							userDetails, null, userDetails.getAuthorities());
 
-				autheticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				SecurityContextHolder.getContext().setAuthentication(autheticationToken);
+					autheticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+					SecurityContextHolder.getContext().setAuthentication(autheticationToken);
+				}
 			}
+		} catch (Exception e) {
+			// Invalid/expired token -> continue unauthenticated, access rules decide the rest
 		}
 		filterChain.doFilter(request, response);
 
+	}
+
+	private String resolveToken(HttpServletRequest request) {
+		final String authHeader = request.getHeader("Authorization");
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			return authHeader.substring(7);
+		}
+		if (request.getCookies() != null) {
+			for (Cookie cookie : request.getCookies()) {
+				if ("jwt".equals(cookie.getName())) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return null;
 	}
 
 }
