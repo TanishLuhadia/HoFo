@@ -95,15 +95,23 @@ label.error{
                     class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
             </div>
 
+            <div class="md:col-span-2 flex items-center justify-between">
+                <span id="locationStatus" class="text-sm text-gray-400">Detecting your location&hellip;</span>
+                <button type="button" id="useLocationBtn"
+                    class="text-sm text-orange-400 hover:text-orange-300 font-semibold">
+                    Use my location
+                </button>
+            </div>
+
             <div>
                 <label class="block text-sm text-gray-300 mb-2">Latitude</label>
-                <input type="number" step="any" id="latitude" name="latitude" placeholder="e.g. 19.0760"
+                <input type="number" step="any" id="latitude" name="latitude" placeholder="e.g. 19.0760 (or enter manually)"
                     class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
             </div>
 
             <div>
                 <label class="block text-sm text-gray-300 mb-2">Longitude</label>
-                <input type="number" step="any" id="longitude" name="longitude" placeholder="e.g. 72.8777"
+                <input type="number" step="any" id="longitude" name="longitude" placeholder="e.g. 72.8777 (or enter manually)"
                     class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
             </div>
 
@@ -147,7 +155,47 @@ function authHeaders(){
     return token ? { "Authorization": "Bearer " + token } : {};
 }
 
+function detectLocation(){
+
+    if(!navigator.geolocation){
+        $("#locationStatus")
+            .removeClass("text-green-400")
+            .addClass("text-red-400")
+            .text("Geolocation not supported. Enter latitude/longitude manually.");
+        return;
+    }
+
+    $("#locationStatus")
+        .removeClass("text-green-400 text-red-400")
+        .text("Detecting your location\u2026");
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position){
+            $("#latitude").val(position.coords.latitude.toFixed(6));
+            $("#longitude").val(position.coords.longitude.toFixed(6));
+            $("#locationStatus")
+                .removeClass("text-red-400")
+                .addClass("text-green-400")
+                .text("Location detected. You can adjust the values if needed.");
+        },
+
+        function(){
+            $("#locationStatus")
+                .removeClass("text-green-400")
+                .addClass("text-red-400")
+                .text("Location permission denied. Please enter latitude/longitude manually.");
+        }
+    );
+}
+
 $(document).ready(function(){
+
+    detectLocation();
+
+    $("#useLocationBtn").click(function(){
+        detectLocation();
+    });
 
     $("#restaurantForm").validate({
 
