@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HoFo - Admin | Add Restaurant</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+
+<style>
+
+body{
+    min-height:100vh;
+    background:
+    radial-gradient(circle at top left,
+    rgba(249,115,22,.15),
+    transparent 40%),
+
+    radial-gradient(circle at bottom right,
+    rgba(249,115,22,.12),
+    transparent 40%),
+
+    #030303;
+}
+
+.glass{
+    backdrop-filter: blur(20px);
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+label.error{
+    color:#ef4444;
+    font-size:13px;
+    margin-top:5px;
+    display:block;
+}
+
+</style>
+
+</head>
+
+<body class="flex items-center justify-center p-6">
+
+    <div class="glass w-full max-w-3xl rounded-3xl p-8 md:p-12">
+
+        <div class="flex items-center justify-between mb-8">
+
+            <div>
+
+                <h1 class="text-3xl font-bold text-white">
+                    Add Restaurant
+                </h1>
+
+                <p class="text-gray-400 mt-2">
+                    Admin only &middot; fill the restaurant details below
+                </p>
+
+            </div>
+
+            <div class="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-3xl">
+                🍽
+            </div>
+
+        </div>
+
+        <form id="restaurantForm" class="grid md:grid-cols-2 gap-6">
+
+            <div class="md:col-span-2">
+                <label class="block text-sm text-gray-300 mb-2">Name</label>
+                <input type="text" id="name" name="name" placeholder="Restaurant name"
+                    class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-sm text-gray-300 mb-2">Description</label>
+                <textarea id="description" name="description" rows="3" placeholder="Short description"
+                    class="w-full px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-sm text-gray-300 mb-2">City</label>
+                <input type="text" id="city" name="city" placeholder="City"
+                    class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
+            </div>
+
+            <div>
+                <label class="block text-sm text-gray-300 mb-2">Address</label>
+                <input type="text" id="address" name="address" placeholder="Full address"
+                    class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
+            </div>
+
+            <div>
+                <label class="block text-sm text-gray-300 mb-2">Latitude</label>
+                <input type="number" step="any" id="latitude" name="latitude" placeholder="e.g. 19.0760"
+                    class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
+            </div>
+
+            <div>
+                <label class="block text-sm text-gray-300 mb-2">Longitude</label>
+                <input type="number" step="any" id="longitude" name="longitude" placeholder="e.g. 72.8777"
+                    class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block text-sm text-gray-300 mb-2">Image URL</label>
+                <input type="url" id="imageUrl" name="imageUrl" placeholder="https://..."
+                    class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
+            </div>
+
+            <div>
+                <label class="block text-sm text-gray-300 mb-2">Nearby Range (km)</label>
+                <input type="number" id="nearbyRangeKm" name="nearbyRangeKm" value="10"
+                    class="w-full h-14 px-4 rounded-xl bg-neutral-900 border border-neutral-700 text-white focus:outline-none focus:border-orange-500">
+            </div>
+
+            <div class="flex items-center gap-3 mt-8">
+                <input type="checkbox" id="active" name="active" checked
+                    class="w-5 h-5 accent-orange-500">
+                <label for="active" class="text-sm text-gray-300">Active</label>
+            </div>
+
+            <div class="md:col-span-2">
+                <span id="message" class="block text-sm"></span>
+            </div>
+
+            <div class="md:col-span-2">
+                <button id="submitBtn" type="submit"
+                    class="w-full h-14 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold transition">
+                    Save Restaurant
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+<script>
+
+function authHeaders(){
+    var token = localStorage.getItem("token");
+    return token ? { "Authorization": "Bearer " + token } : {};
+}
+
+$(document).ready(function(){
+
+    $("#restaurantForm").validate({
+
+        rules: {
+            name: { required: true },
+            city: { required: true },
+            address: { required: true }
+        },
+
+        messages: {
+            name: { required: "Please enter restaurant name" },
+            city: { required: "Please enter city" },
+            address: { required: "Please enter address" }
+        },
+
+        submitHandler: function(){
+
+            $("#submitBtn").prop("disabled", true);
+            $("#message").text("").removeClass("text-green-400 text-red-400");
+
+            var payload = {
+                name: $("#name").val(),
+                description: $("#description").val(),
+                city: $("#city").val(),
+                address: $("#address").val(),
+                latitude: $("#latitude").val() ? parseFloat($("#latitude").val()) : null,
+                longitude: $("#longitude").val() ? parseFloat($("#longitude").val()) : null,
+                imageUrl: $("#imageUrl").val(),
+                active: $("#active").is(":checked"),
+                nearbyRangeKm: $("#nearbyRangeKm").val() ? parseInt($("#nearbyRangeKm").val(), 10) : null
+            };
+
+            $.ajax({
+                url: "/admin/restaurant",
+                type: "POST",
+                contentType: "application/json",
+                headers: authHeaders(),
+                data: JSON.stringify(payload),
+
+                success: function(data){
+                    $("#submitBtn").prop("disabled", false);
+                    $("#message")
+                        .addClass("text-green-400")
+                        .text("Restaurant saved successfully (id: " + data.id + ")");
+                    $("#restaurantForm")[0].reset();
+                    $("#active").prop("checked", true);
+                    $("#nearbyRangeKm").val(10);
+                },
+
+                error: function(xhr){
+                    $("#submitBtn").prop("disabled", false);
+                    if(xhr.status === 401 || xhr.status === 403){
+                        $("#message")
+                            .addClass("text-red-400")
+                            .text("Unauthorized. Please login as an admin.");
+                    } else {
+                        $("#message")
+                            .addClass("text-red-400")
+                            .text("Something went wrong. Please try again.");
+                    }
+                }
+            });
+
+        }
+
+    });
+
+});
+
+</script>
+
+</body>
+
+</html>
